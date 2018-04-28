@@ -1,4 +1,4 @@
-$("document").ready(function(){
+// $("document").ready(function(){
   // Initialize Firebase
     var config = {
         apiKey: "AIzaSyAOVzSpkU5SSWBeGtL_Cwb2l02E2HAhxbI",
@@ -22,13 +22,11 @@ $("document").ready(function(){
         var destination = $("#new-destination").val().trim();
         var frequency = $("#frequency").val().trim();
         var timeStamp = moment();
-        var arrivalTime = moment(timeStamp).format("hh:mm a");
-        var departureDelay = moment().add(10, "minutes");
-        var departureTime = moment(departureDelay).format("hh:mm a");
-
+        var submitTime = moment(timeStamp).format("hh:mm a");
+        var nextTrain = moment(timeStamp).add(frequency, "minutes");
+        var trainArrival = moment(nextTrain).format("hh:mm a");
         console.log(timeStamp);
-        console.log(arrivalTime);
-        console.log(departureTime);
+        console.log(nextTrain);
     
 
         // Alert user if they forgot to enter a value
@@ -49,8 +47,8 @@ $("document").ready(function(){
             name : trainName,
             destination : destination,
             frequency : frequency,
-            arrivalTime : arrivalTime,
-            departureTime : departureTime
+            trainArrival : trainArrival,
+            submitTime : submitTime
         };
 
         // Pushing train data to firebase database
@@ -61,8 +59,7 @@ $("document").ready(function(){
         console.log(newTrain.name);
         console.log(newTrain.destination);
         console.log(newTrain.frequency);
-        console.log(newTrain.arrivalTime);
-        console.log(newTrain.departureTime);
+        console.log(newTrain.trainArrival);
 
         // Clearing text boxes after submitting data
         $("#new-train").val("");
@@ -80,15 +77,39 @@ $("document").ready(function(){
 
         var train = childSnapshot.val().name;
         var destination = childSnapshot.val().destination;
+        var trainArrival = childSnapshot.val().trainArrival;
         var frequency = childSnapshot.val().frequency;
-        var arrivalTime = childSnapshot.val().arrivalTime;
-        var departureTime = childSnapshot.val().departureTime
         console.log(train);
         console.log(destination);
         console.log(frequency);
-        console.log(arrivalTime);
-        console.log(departureTime);
+        console.log(trainArrival);
+
+        // Difference between trains
+        var diffTime = moment().diff(moment(trainArrival), "minutes");
+        console.log(diffTime);
+
+        // Time of trains apart
+        var apartTime = diffTime % frequency;
+
+        // Minutes till the next train
+        var minsToNextTrain = frequency - apartTime;
+
+        // Next Arrival Time
+        // var nextArrival = moment().add(frequency, "minutes");
+        // var nextArrivalPretty = moment(nextArrival).format("hh:mm a");
+        
+        // Next Departure Time
+        // var nextDeparture = moment(trainArrival).add(10, "minutes");
+        // console.log(nextDeparture)
+        var nextDeparturePretty = moment(trainArrival).add(10, "minutes").format("hh:mm a");
+        console.log(nextDeparturePretty)
+
+        // Add the train data into the table
+        $("#train-table > tbody").append("<tr><td>" + train + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" +
+            trainArrival + "</td><td>" + minsToNextTrain + "</td><td>" + nextDeparturePretty + "</td>");
+
+
     })
 
 
-});
+// });
