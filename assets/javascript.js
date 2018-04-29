@@ -1,4 +1,4 @@
-// $("document").ready(function(){
+$("document").ready(function(){
   // Initialize Firebase
     var config = {
         apiKey: "AIzaSyAOVzSpkU5SSWBeGtL_Cwb2l02E2HAhxbI",
@@ -112,5 +112,10 @@
 
     })
 
+    // var autoRefresh = setInterval(
+    //     function()
+    //     {
+    //     $("tbody").fadeOut('slow').load("database").fadeIn("slow");
+    //     }, 10000);
 
-// });
+});

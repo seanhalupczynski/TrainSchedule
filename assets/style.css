@@ -1,0 +1,15 @@
+body {
+    background-color: lightyellow;
+}
+
+.jumbotron {
+    background-color: maroon;
+    color: white;
+    text-align: center;
+}
+
+.btn {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+}
