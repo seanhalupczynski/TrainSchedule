@@ -22,11 +22,13 @@
         var destination = $("#new-destination").val().trim();
         var frequency = $("#frequency").val().trim();
         var timeStamp = moment();
-        var submitTime = moment(timeStamp).format("hh:mm a");
-        var nextTrain = moment(timeStamp).add(frequency, "minutes");
-        var trainArrival = moment(nextTrain).format("hh:mm a");
+        var submitTime = moment(timeStamp).format("X");
+        var nextTrain = moment(timeStamp).add(frequency, "minutes").format("X");
+        var trainArrival = moment.unix(nextTrain).format("hh:mm a");
         console.log(timeStamp);
+        console.log(submitTime);
         console.log(nextTrain);
+        console.log(trainArrival);
     
 
         // Alert user if they forgot to enter a value
@@ -48,6 +50,7 @@
             destination : destination,
             frequency : frequency,
             trainArrival : trainArrival,
+            nextTrain : nextTrain,
             submitTime : submitTime
         };
 
@@ -60,6 +63,8 @@
         console.log(newTrain.destination);
         console.log(newTrain.frequency);
         console.log(newTrain.trainArrival);
+        console.log(newTrain.nextTrain);
+        console.log(newTrain.submitTime);
 
         // Clearing text boxes after submitting data
         $("#new-train").val("");
@@ -79,34 +84,30 @@
         var destination = childSnapshot.val().destination;
         var trainArrival = childSnapshot.val().trainArrival;
         var frequency = childSnapshot.val().frequency;
+        var firstTrainTime = childSnapshot.val().submitTime;
+        var nextTrain = childSnapshot.val().nextTrain;
         console.log(train);
         console.log(destination);
         console.log(frequency);
         console.log(trainArrival);
+        console.log(firstTrainTime);
+        console.log(nextTrain);
 
         // Difference between trains
-        var diffTime = moment().diff(moment(trainArrival), "minutes");
+        var currentTime = moment().format("X");
+        var diffTime = nextTrain - currentTime;
         console.log(diffTime);
 
-        // Time of trains apart
-        var apartTime = diffTime % frequency;
+        var minsToNextTrain = moment.unix(diffTime).format("m");
+        console.log(minsToNextTrain);
 
-        // Minutes till the next train
-        var minsToNextTrain = frequency - apartTime;
-
-        // Next Arrival Time
-        // var nextArrival = moment().add(frequency, "minutes");
-        // var nextArrivalPretty = moment(nextArrival).format("hh:mm a");
-        
         // Next Departure Time
-        // var nextDeparture = moment(trainArrival).add(10, "minutes");
-        // console.log(nextDeparture)
-        var nextDeparturePretty = moment(trainArrival).add(10, "minutes").format("hh:mm a");
-        console.log(nextDeparturePretty)
+        var nextDeparture = moment.unix(nextTrain).add(10, "minutes").format("hh:mm a");
+        console.log(nextDeparture)
 
         // Add the train data into the table
         $("#train-table > tbody").append("<tr><td>" + train + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" +
-            trainArrival + "</td><td>" + minsToNextTrain + "</td><td>" + nextDeparturePretty + "</td>");
+            trainArrival + "</td><td>" + minsToNextTrain + "</td><td>" + nextDeparture + "</td>");
 
 
     })
